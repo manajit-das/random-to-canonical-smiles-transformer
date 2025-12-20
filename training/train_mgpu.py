@@ -3,7 +3,7 @@
 import re
 import torch
 from torch.utils.data import Dataset, DataLoader
-from data_utils import my_collate_fn
+from data_utils import my_collate_fn, TokenizedSeq2SeqDataset
 from models import MyModel
 import torch.nn as nn
 
@@ -14,35 +14,6 @@ import torch.distributed as dist
 import torch
 import os
 from torch.utils.data.distributed import DistributedSampler
-
-
-class TokenizedSeq2SeqDataset(Dataset):
-    def __init__(self, pt_path):
-        data = torch.load(pt_path, map_location="cpu")
-
-        self.src = data["src_tokens"]
-        self.tgt = data["tgt_tokens"]
-        self.src_lengths = data["src_lengths"]
-        self.tgt_lengths = data["tgt_lengths"]
-        self.vocab_size= len(data["vocab"])
-        self.vocab_list = data["vocab"]
-
-        assert len(self.src) == len(self.tgt)
-
-    def __len__(self):
-        return len(self.src)
-
-    def __getitem__(self, idx):
-        return (
-            self.src[idx],
-            self.tgt[idx],
-            self.src_lengths[idx],
-            self.tgt_lengths[idx],
-        )
-
-
-#mydata = TokenizedSeq2SeqDataset("seq2seq_data.pt")
-#print(mydata[0])
 
 
 local_rank = int(os.environ["LOCAL_RANK"])
