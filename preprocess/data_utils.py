@@ -14,13 +14,6 @@ SMI_REGEX_PATTERN = (
     r"%[0-9]{2}|[0-9])"
 )
 
-from os import stat
-SMI_REGEX_PATTERN = (
-    r"(\[[^\]]+]|Br?|Cl?|N|O|S|P|F|I|"
-    r"b|c|n|o|s|p|"
-    r"\(|\)|\.|=|#|\+|\\/|:|@|\?|>|\*|\$|"
-    r"%[0-9]{2}|[0-9])"
-)
 
 class mydataset(Dataset):
   def __init__(self, input_csv_path):
@@ -65,6 +58,30 @@ class mydataset(Dataset):
 
 
 import torch
+
+class TokenizedSeq2SeqDataset(Dataset):
+    def __init__(self, pt_path):
+        data = torch.load(pt_path, map_location="cpu")
+
+        self.src = data["src_tokens"]
+        self.tgt = data["tgt_tokens"]
+        self.src_lengths = data["src_lengths"]
+        self.tgt_lengths = data["tgt_lengths"]
+        self.vocab_size= len(data["vocab"])
+        self.vocab_list = data["vocab"]
+
+        assert len(self.src) == len(self.tgt)
+
+    def __len__(self):
+        return len(self.src)
+
+    def __getitem__(self, idx):
+        return (
+            self.src[idx],
+            self.tgt[idx],
+            self.src_lengths[idx],
+            self.tgt_lengths[idx],
+        )
 
 def my_collate_fn(batch):
     src_tokens, tgt_tokens, src_seq_len, tgt_seq_len = zip(*batch)
