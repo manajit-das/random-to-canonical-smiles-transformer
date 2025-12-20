@@ -14,6 +14,93 @@ SMI_REGEX_PATTERN = (
     r"%[0-9]{2}|[0-9])"
 )
 
+class SmilesTokenizer:
+    def __init__(self, vocab_list):
+        self.vocab = vocab_list
+        self.char_to_int = {tok: i for i, tok in enumerate(vocab_list)}
+        self.int_to_char = {i: tok for i, tok in enumerate(vocab_list)}
+
+        self.pad_idx = self.char_to_int["PAD"]
+        self.bos_idx = self.char_to_int["BOS"]
+        self.eos_idx = self.char_to_int["EOS"]
+        self.unk_idx = self.char_to_int["<UNK>"]
+
+        self.regex = re.compile(SMI_REGEX_PATTERN)
+
+    def tokenize(self, smiles):
+        tokens = self.regex.findall(smiles)
+        return [self.char_to_int.get(t, self.unk_idx) for t in tokens]
+
+    def encode(self, smiles, add_bos_eos=False):
+        ids = self.tokenize(smiles)
+
+        if add_bos_eos:
+            ids = [self.bos_idx] + ids + [self.eos_idx]
+
+        return torch.tensor(ids, dtype=torch.long)
+
+    def batch_encode(self, smiles_list, add_bos_eos=False):
+        tokenized = []
+        lengths = []
+
+        for s in smiles_list:
+            ids = self.encode(s, add_bos_eos)
+            tokenized.append(ids)
+            lengths.append(len(ids))
+
+        return tokenized, lengths
+
+    def decode(self, ids, remove_special_tokens=True):
+        """
+        ids: list[int] | torch.Tensor
+        """
+        if isinstance(ids, torch.Tensor):
+            ids = ids.tolist()
+
+        tokens = []
+        for i in ids:
+            if remove_special_tokens and i in {
+                self.pad_idx,
+                self.bos_idx,
+                self.eos_idx,
+            }:
+                continue
+            tokens.append(self.int_to_char.get(i, "<UNK>"))
+
+        return "".join(tokens)
+
+    def batch_decode(self, batch_ids, remove_special_tokens=True):
+        return [
+                self.decode(ids, remove_special_tokens)
+                for ids in batch_ids
+                ]
+
+
+def create_vocab(smiles_list):
+    vocab = set()
+    for smiles in smiles_list:
+        tokens = re.findall(SMI_REGEX_PATTERN, smiles)
+        vocab.update(tokens)
+    return vocab
+
+'''
+ckpt = torch.load("../data/vocab.pt")
+tokenizer = SmilesTokenizer(ckpt["vocab"])
+smi = "CC(=O)O"
+
+ids = tokenizer.encode(smi, add_bos_eos=True)
+print(ids)
+# tensor([BOS, C, C, (, =, O, ), O, EOS])
+
+decoded = tokenizer.decode(ids)
+print(decoded)
+# "CC(=O)O"
+
+exit()
+'''
+
+
+
 class TokenizedSeq2SeqDataset(Dataset):
     def __init__(self, pt_path):
         data = torch.load(pt_path, map_location="cpu")
@@ -37,6 +124,7 @@ class TokenizedSeq2SeqDataset(Dataset):
             self.src_lengths[idx],
             self.tgt_lengths[idx],
         )
+        
 
 def my_collate_fn(batch):
     src_tokens, tgt_tokens, src_seq_len, tgt_seq_len = zip(*batch)
