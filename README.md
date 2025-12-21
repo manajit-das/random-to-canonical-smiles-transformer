@@ -9,7 +9,7 @@ The system is designed to scale from single-GPU experiments to large multi-GPU D
 
 ## Key Features
 
-- Regex-based chemically valid SMILES tokenization
+- Regex-based chemically valid SMILES tokenization from [here](https://github.com/pschwllr/MolecularTransformer): 
 - Shared source–target vocabulary with BOS / EOS / PAD handling
 - Offline tokenization for large-scale datasets
 - DistributedDataParallel (DDP) training on Slurm clusters
