@@ -107,10 +107,10 @@ Samples 1000 random test molecules
 Performs greedy decoding
 
 Reports exact match accuracy and SMILES validity
-```
 
-```
-## Project Structure
+
+
+### 5. Project Structure
 
 ```text
 random-to-canonical-smiles-transformer/
