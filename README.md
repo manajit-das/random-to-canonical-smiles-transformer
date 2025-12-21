@@ -72,11 +72,11 @@ These `.pt` files are ready for multi-GPU Transformer training.
 From the project root directory, train the Transformer model using Distributed Data Parallel (DDP):
 
 ```bash
-srun python preprocess_smiles.py \
-  --train_csv ./../data/lotus_train42.csv \
-  --val_csv ./../data/lotus_val42.csv \
-  --test_csv ./../data/lotus_test42.csv \
-  --out_dir ./../data/
+srun torchrun --nproc_per_node=4 train_mgpu.py \
+  --data_path ./data \
+  --ckpt_path ./checkpoints \
+  --num_epochs 100 \
+  --batch_size 64
 ```
 
 ```
