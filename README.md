@@ -31,10 +31,13 @@ tgt_smiles → Canonical SMILES
 
 Place the files inside the data/ directory:
 
+```text
 data/
- ├── train.csv
- ├── val.csv
- └── test.csv
+ ├── train.pt
+ ├── val.pt
+ └── test.pt
+```
+
 
 2️⃣ Preprocessing & Tokenization
 
