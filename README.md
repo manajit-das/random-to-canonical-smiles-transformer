@@ -91,6 +91,10 @@ Training uses PyTorch DDP, DistributedSampler, and NCCL backend.
 
 Model checkpoints are saved to: `checkpoints`
 
+### 4. Evaluation
+
+Run inference and evaluation on the test set using:
+
 
 ```
 ## Project Structure
