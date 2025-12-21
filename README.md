@@ -66,15 +66,33 @@ data/
 These .pt files are ready for multi-GPU Transformer training.
 
 
-### 3. Multi-GPU Training (DDP)
-From the project root directory, train the model using PyTorch Distributed Data Parallel:
+### 2. Preprocessing and Tokenization
 
-srun torchrun --nproc_per_node=4 train_mgpu.py \
-  --data_path ./data \
-  --ckpt_path ./checkpoints \
-  --num_epochs 100 \
-  --batch_size 64
+Navigate to the `preprocess/` directory and run the preprocessing script:
 
+```bash
+srun python preprocess_smiles.py \
+  --train_csv ./../data/lotus_train42.csv \
+  --val_csv ./../data/lotus_val42.csv \
+  --test_csv ./../data/lotus_test42.csv \
+  --out_dir ./../data/
+
+This step performs the following operations:
+
+Builds a shared vocabulary from both source and target SMILES
+
+Tokenizes SMILES using a regex-based tokenizer
+
+Stores tokenized sequences and sequence lengths for efficient training
+
+The generated output files are:
+
+data/
+ ├── train.pt
+ ├── val.pt
+ └── test.pt
+
+These .pt files are ready for multi-GPU Transformer training.
 
 
 
