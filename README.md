@@ -96,6 +96,12 @@ Model checkpoints are saved to: `checkpoints`
 Run inference and evaluation on the test set using:
 
 
+```bash
+python test.py
+```
+
+
+
 ```
 ## Project Structure
 
