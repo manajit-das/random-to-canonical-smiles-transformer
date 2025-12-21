@@ -75,16 +75,16 @@ srun torchrun --nproc_per_node=4 train_mgpu.py \
 ```
 Important notes:
 
-Request the same number of GPUs in your Slurm script:
+- Request the same number of GPUs in your Slurm script:
 
 ```bash
 #SBATCH --grus=gpu:4
 ```
-A sample Slurm script (run.sh) is provided for reference.
+- A sample Slurm script (run.sh) is provided for reference.
 
-Training uses PyTorch DDP, DistributedSampler, and NCCL backend.
+- Training uses PyTorch DDP, DistributedSampler, and NCCL backend.
 
-Model checkpoints are saved to: `checkpoints`
+- Model checkpoints are saved to: `checkpoints`
 
 ### 4. Evaluation
 
