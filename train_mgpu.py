@@ -13,6 +13,7 @@ import os
 from torch.utils.data.distributed import DistributedSampler
 from preprocess.data_utils import TokenizedSeq2SeqDataset, my_collate_fn
 from model.models import MyModel
+import argparse
 
 local_rank = int(os.environ["LOCAL_RANK"])
 rank = int(os.environ["RANK"])
@@ -57,18 +58,26 @@ def run_validation(model, val_loader, criterion, device):
 
     return (total_loss / total_tokens).item()
 
-def main(local_rank, world_size, rank, data_path, model_save_path):
+def parse_args():
+    parser = argparse.ArgumentParser(description="train/val inputs")
+    parser.add_argument("--data_path", required=True)
+    parser.add_argument("--ckpt_path", required=True)
+    parser.add_argument("--num_epochs", type=int, default=2)
+    parser.add_argument("--batch_size", type=int, default=64)
+    return parser.parse_args()
+
+def main(local_rank, world_size, rank, data_path, model_save_path, num_epochs=2, batch_size=64):
     mydata = TokenizedSeq2SeqDataset(f"./{data_path}/train.pt")
     sampler = DistributedSampler(mydata,
             num_replicas=world_size,
             rank=rank,
             shuffle=True,)
-    myloader = DataLoader(mydata, batch_size=64, collate_fn=my_collate_fn, sampler=sampler)
+    myloader = DataLoader(mydata, batch_size=batch_size, collate_fn=my_collate_fn, sampler=sampler)
     
     #prepare the validation dataset
     val_data = TokenizedSeq2SeqDataset(f"./{data_path}/val.pt")
     val_sampler = DistributedSampler(val_data, num_replicas=world_size, rank=rank, shuffle=False)
-    val_loader = DataLoader(val_data, batch_size=64, collate_fn=my_collate_fn, sampler=val_sampler)
+    val_loader = DataLoader(val_data, batch_size=batch_size, collate_fn=my_collate_fn, sampler=val_sampler)
 
 
     
@@ -92,7 +101,7 @@ def main(local_rank, world_size, rank, data_path, model_save_path):
     criterion = nn.CrossEntropyLoss(ignore_index=PAD_IDX)
     MAX_GRAD_NORM = 1.0
 
-    num_epochs = 2
+    num_epochs = num_epochs
 
     for epoch in range(num_epochs):
         sampler.set_epoch(epoch)
@@ -156,6 +165,8 @@ def main(local_rank, world_size, rank, data_path, model_save_path):
 
         if rank == 0 and val_loss < best_val_loss:
             best_val_loss = val_loss
+            
+            os.makedirs(f"./{model_save_path}", exist_ok=True)
 
             torch.save(
                     {
@@ -169,8 +180,9 @@ def main(local_rank, world_size, rank, data_path, model_save_path):
 if __name__ == "__main__":
     import time
     st_time = time.time()
-
-    main(local_rank, world_size, rank, data_path="./data", model_save_path="./checkpoints")
+    args = parse_args()
+    main(local_rank, world_size, rank, data_path=args.data_path, model_save_path=args.ckpt_path,
+            num_epochs = args.num_epochs, batch_size = args.batch_size)
     en_time = time.time()
     print('Time required:', (en_time-st_time)/60)
 
