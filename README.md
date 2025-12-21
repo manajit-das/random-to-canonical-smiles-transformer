@@ -21,19 +21,14 @@ The system is designed to scale from single-GPU experiments to large multi-GPU D
 
 ### 1. Dataset Preparation
 
-Prepare three CSV files:
 
-- `train.csv`
-- `val.csv`
-- `test.csv`
+Download the dataset consisting of three CSV files: `train.csv`, `val.csv`, and `test.csv`.
+Each CSV file must contain two columns:
 
-Each CSV file must contain the following columns:
-
-- `src_smiles`: Randomized (non-canonical) SMILES  
+- `src_smiles`: randomized (non-canonical) SMILES
 - `tgt_smiles`: Canonical SMILES  
 
 Place the files inside the `data/` directory:
-
 
 ---
 
@@ -51,11 +46,11 @@ srun python preprocess_smiles.py \
 
 This step performs the following operations:
 
-1. Builds a shared vocabulary from both source and target SMILES
+- 1. Builds a shared vocabulary from both source and target SMILES
 
-2. Tokenizes SMILES using a regex-based tokenizer
+- 2. Tokenizes SMILES using a regex-based tokenizer
 
-3. Stores tokenized sequences and sequence lengths for efficient training
+- 3. Stores tokenized sequences and sequence lengths for efficient training
 
 The generated output files are:
 
@@ -102,11 +97,11 @@ python test.py
 
 The script:
 
-Samples 1000 random test molecules
+- Samples 1000 random test molecules
 
-Performs greedy decoding
+- Performs greedy decoding
 
-Reports exact match accuracy and SMILES validity
+- Reports exact match accuracy and SMILES validity
 
 
 
