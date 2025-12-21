@@ -64,12 +64,11 @@ data/
  ├── train.pt
  ├── val.pt
  └── test.pt
-
+```
 These `.pt` files are ready for multi-GPU Transformer training.
 
-```
 ### 3. Multi-GPU Training
-```
+
 
 ```
 ## Project Structure
@@ -89,6 +88,7 @@ random-to-canonical-smiles-transformer/
 ├── run.sh
 ├── requirements.txt
 └── README.md
+```
 
 
 
