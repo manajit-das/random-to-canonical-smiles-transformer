@@ -12,26 +12,33 @@ Key features:
 - DistributedDataParallel (DDP) training on Slurm clusters
 - Batch greedy decoding for inference
 
-Usage
-Step 1: Dataset Preparation
+🚀 Usage
+1️⃣ Dataset Preparation
 
-Download the dataset consisting of three CSV files: train.csv, val.csv, and test.csv.
-Each file must contain two columns:
+Download the dataset containing three CSV files:
 
-src_smiles: randomized (non-canonical) SMILES
+train.csv
 
-tgt_smiles: corresponding canonical SMILES
+val.csv
 
-Place all files inside the data/ directory:
+test.csv
+
+Each CSV must contain the following columns:
+
+src_smiles → Randomized (non-canonical) SMILES
+
+tgt_smiles → Canonical SMILES
+
+Place the files inside the data/ directory:
 
 data/
  ├── train.csv
  ├── val.csv
  └── test.csv
 
-Step 2: Preprocessing and Tokenization
+2️⃣ Preprocessing & Tokenization
 
-Navigate to the preprocess/ directory and run the preprocessing script to tokenize SMILES and build a shared vocabulary:
+Navigate to the preprocess/ directory and run the preprocessing script:
 
 srun python preprocess_smiles.py \
   --train_csv ./../data/lotus_train42.csv \
@@ -40,15 +47,15 @@ srun python preprocess_smiles.py \
   --out_dir ./../data/
 
 
-This step:
+This step performs the following:
 
-Builds a single vocabulary shared across source and target SMILES
+✅ Builds a shared vocabulary from both source and target SMILES
 
-Tokenizes SMILES using a regex-based tokenizer
+✅ Tokenizes SMILES using a regex-based tokenizer
 
-Saves preprocessed datasets for efficient training
+✅ Stores tokenized sequences and lengths for fast training
 
-Generated files:
+Output files:
 
 data/
  ├── train.pt
@@ -56,11 +63,11 @@ data/
  └── test.pt
 
 
-These .pt files contain tokenized sequences and sequence lengths and are ready for multi-GPU training.
+These .pt files are ready for multi-GPU Transformer training.
 
-Step 3: Multi-GPU Training
+3️⃣ Multi-GPU Training (DDP)
 
-From the project root directory, train the Transformer model using PyTorch Distributed Data Parallel (DDP):
+From the project root, train the model using PyTorch Distributed Data Parallel (DDP):
 
 srun torchrun --nproc_per_node=4 train_mgpu.py \
   --data_path ./data \
@@ -69,32 +76,32 @@ srun torchrun --nproc_per_node=4 train_mgpu.py \
   --batch_size 64
 
 
-Important notes:
-
-Request the same number of GPUs in your Slurm script:
+⚠️ Make sure your Slurm script requests the same number of GPUs:
 
 #SBATCH --gres=gpu:4
 
 
-A sample Slurm script (run.sh) is provided.
+A sample Slurm launcher (run.sh) is provided.
 
-Training uses NCCL backend, DistributedSampler, and synchronized gradient updates.
-
-Model checkpoints are saved to:
+📦 Trained model checkpoints are saved to:
 
 checkpoints/
 
-Step 4: Evaluation
+4️⃣ Evaluation
 
-Evaluate the trained model on the test set using:
+Evaluate the trained model on the test set:
 
 python test.py
 
 
-This script:
+The evaluation script:
 
-Randomly samples 1000 molecules from the test set
+🔹 Randomly samples 1000 molecules from the test set
 
-Performs greedy decoding
+🔹 Performs greedy decoding
 
-Reports exact match accuracy and SMILES validity
+🔹 Reports:
+
+Exact match accuracy
+
+SMILES validity
