@@ -65,8 +65,8 @@ data/
 
 These .pt files are ready for multi-GPU Transformer training.
 
-3. Multi-GPU Training (DDP)
 
+### 3. Multi-GPU Training (DDP)
 From the project root directory, train the model using PyTorch Distributed Data Parallel:
 
 srun torchrun --nproc_per_node=4 train_mgpu.py \
@@ -74,7 +74,6 @@ srun torchrun --nproc_per_node=4 train_mgpu.py \
   --ckpt_path ./checkpoints \
   --num_epochs 100 \
   --batch_size 64
-
 
 
 
