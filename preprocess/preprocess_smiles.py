@@ -86,7 +86,7 @@ def main():
     # --------------------------------------------------
     train_src, train_tgt = load_smiles(args.train_csv)
     vocab = create_vocab(train_src + train_tgt)
-    vocab_list = special_tokens + sorted(vocab)
+    vocab_list = SPECIAL_TOKENS  + sorted(vocab)
     tokenizer = SmilesTokenizer(vocab_list)
      
     torch.save({
