@@ -22,7 +22,7 @@ The system is designed to scale from single-GPU experiments to large multi-GPU D
 ### 1. Dataset Preparation
 
 
-Download the dataset consisting of three CSV files: `train.csv`, `val.csv`, and `test.csv`.
+Download the dataset consisting of three CSV files: `lotus_train42.csv`, `lotus_val42.csv`, and `lotus_test42.csv` from here: https://drive.google.com/drive/folders/1ildwnYIwyCUPT7Hb7NMnNz6yL2to4EvN?usp=sharing.
 Each CSV file must contain two columns:
 
 - `src_smiles`: randomized (non-canonical) SMILES
