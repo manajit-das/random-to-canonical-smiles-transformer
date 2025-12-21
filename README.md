@@ -100,7 +100,14 @@ Run inference and evaluation on the test set using:
 python test.py
 ```
 
+The script:
 
+Samples 1000 random test molecules
+
+Performs greedy decoding
+
+Reports exact match accuracy and SMILES validity
+```
 
 ```
 ## Project Structure
