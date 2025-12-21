@@ -59,7 +59,7 @@ This step performs the following operations:
 
 The generated output files are:
 
-
+```text
 data/
  ├── train.pt
  ├── val.pt
@@ -69,6 +69,9 @@ These `.pt` files are ready for multi-GPU Transformer training.
 
 ```
 ### 3. Multi-GPU Training
+```
+
+```
 
 
 
