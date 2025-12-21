@@ -12,4 +12,27 @@ Key features:
 - DistributedDataParallel (DDP) training on Slurm clusters
 - Batch greedy decoding for inference
 
+Usage
+Step 1: Dataset Preparation
 
+Download the dataset consisting of three CSV files: train.csv, val.csv, and test.csv.
+Each CSV file must contain two columns:
+
+src_smiles: randomized (non-canonical) SMILES
+
+tgt_smiles: corresponding canonical SMILES
+
+Place all files inside the data/ directory.
+
+data/
+ ├── train.csv
+ ├── val.csv
+ └── test.csv
+
+Step 2: Preprocessing and Tokenization
+
+Navigate to the preprocess/ directory and run the preprocessing script to tokenize SMILES and build a shared vocabulary:
+
+Step 2: Preprocessing and Tokenization
+
+Navigate to the preprocess/ directory and run the preprocessing script to tokenize SMILES and build a shared vocabulary:
