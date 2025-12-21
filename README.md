@@ -72,6 +72,23 @@ These `.pt` files are ready for multi-GPU Transformer training.
 ```
 
 ```
+## Project Structure
+
+```text
+random-to-canonical-smiles-transformer/
+├── data/
+│   ├── lotus_train.csv
+│   ├── lotus_val.csv
+│   └── lotus_test.csv
+├── preprocess/
+│   └── preprocess_smiles.py
+├── model/
+│   └── transformer.py
+├── train_mgpu.py
+├── test.py
+├── run.sh
+├── requirements.txt
+└── README.md
 
 
 
