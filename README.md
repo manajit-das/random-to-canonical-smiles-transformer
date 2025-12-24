@@ -93,7 +93,7 @@ Run inference and evaluation on the test set using:
 
 
 ```bash
-srun python github_test_eval.py --test_path ./data --model_path ./checkpoints --save_pred  --bs 64 --max_len 600
+srun python test.py --test_path ./data --model_path ./checkpoints --save_pred  --bs 64 --max_len 600
 ```
 
 The script:
