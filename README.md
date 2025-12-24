@@ -98,7 +98,7 @@ srun python test.py --test_path ./data --model_path ./checkpoints --save_pred  -
 
 The script:
 
-- Samples 1000 random test molecules
+- Samples test molecules from the `test.pt` file batch wise
 
 - Performs greedy decoding
 
